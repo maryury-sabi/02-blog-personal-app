@@ -1,0 +1,13 @@
+title = "Configuración Gitleaks · 02-blog-personal-app"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Permitir env.example con valores falsos y archivos de pruebas con mocks"
+paths = [
+  '''^env\.example$''',
+  '''^__tests__/.*''',
+  '''^\.claude/hooks/.*''',
+  '''^ia/.*'''
+]

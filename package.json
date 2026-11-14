@@ -1,0 +1,61 @@
+{
+  "name": "02-blog-personal-app",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "jest --coverage",
+    "test:hook": "node --test .claude/hooks/pre-tool-use.test.mjs",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run test:hook",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "expo": "~53.0.0",
+    "expo-clipboard": "~7.1.0",
+    "expo-file-system": "~18.1.0",
+    "expo-image-manipulator": "~13.1.0",
+    "expo-image-picker": "~16.1.0",
+    "expo-location": "~18.1.0",
+    "expo-router": "~5.0.0",
+    "expo-secure-store": "~14.2.0",
+    "expo-sensors": "~14.1.0",
+    "expo-sharing": "~13.1.0",
+    "expo-sqlite": "~15.2.0",
+    "expo-status-bar": "~2.2.0",
+    "react": "19.0.0",
+    "react-native": "0.79.2",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.0",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.10.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@testing-library/react-native": "^13.1.0",
+    "@types/jest": "^29.5.14",
+    "@types/react": "~19.0.10",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "^9.2.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-expo": "~53.0.0",
+    "lint-staged": "^15.4.0",
+    "prettier": "^3.5.0",
+    "typescript": "~5.8.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,mjs,js,json,md}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --max-warnings 0"
+    ]
+  }
+}

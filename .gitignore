@@ -1,0 +1,22 @@
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+
+# Secretos y llaves de firma (NUNCA versionar)
+.env
+.env.*
+*.pem
+*.key
+*.keystore
+*.jks
+*firebase-adminsdk*.json
+
+# Nativo / builds
+*.apk
+*.aab
+*.ipa
+.DS_Store
+Thumbs.db
+*.log

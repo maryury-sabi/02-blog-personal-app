@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Diario Móvil",
+    "slug": "02-blog-personal-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "diariomovil",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Se usa para etiquetar tus entradas con la ciudad donde las escribes."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Se usa para adjuntar fotos a tus entradas del diario.",
+          "cameraPermission": "Se usa para tomar fotos y adjuntarlas a tus entradas."
+        }
+      ]
+    ],
+    "android": {
+      "package": "com.maryury.blogpersonal",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.maryury.blogpersonal"
+    }
+  }
+}
