@@ -1,6 +1,7 @@
 # Configuración de IA · 02-blog-personal-app
 
 ## Capas de seguridad implementadas
+
 1. **Instrucciones del proyecto (`AGENTS.md` + `CLAUDE.md`)**: define stack Expo/React Native, capas, accesibilidad de gestos, uso seguro de sensores y prohibiciones.
 2. **Permisos declarativos (`.claude/settings.json`)**:
    - `permissions.deny`: bloquea lectura de `.env*`, `*.keystore`, `*.jks`, `*.pem`, `*.key`, edición de `.claude/**` y comandos `sudo`, `rm -rf`, `curl`, `wget`, `git push --force`, `git reset --hard`.

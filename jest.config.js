@@ -4,7 +4,11 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  collectCoverageFrom: ["src/services/**/*.ts", "src/utils/**/*.ts", "src/sensors/**/*.ts"],
+  collectCoverageFrom: [
+    "src/services/**/*.ts",
+    "src/utils/**/*.ts",
+    "src/sensors/barometerUtils.ts",
+  ],
   coverageThreshold: {
     global: {
       lines: 80,

@@ -27,10 +27,7 @@
     ],
     "android": {
       "package": "com.maryury.blogpersonal",
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ]
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
     },
     "ios": {
       "bundleIdentifier": "com.maryury.blogpersonal"

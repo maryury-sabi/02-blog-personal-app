@@ -17,13 +17,7 @@
       "Bash(git push --force*)",
       "Bash(git reset --hard*)"
     ],
-    "ask": [
-      "Bash(git push*)",
-      "Bash(npm install*)",
-      "Bash(npm i *)",
-      "Bash(npx *)",
-      "Bash(eas*)"
-    ]
+    "ask": ["Bash(git push*)", "Bash(npm install*)", "Bash(npm i *)", "Bash(npx *)", "Bash(eas*)"]
   },
   "sandbox": {
     "enabled": true,
@@ -34,10 +28,7 @@
       "allowRead": ["."]
     },
     "network": {
-      "allowedDomains": [
-        "registry.npmjs.org",
-        "github.com"
-      ]
+      "allowedDomains": ["registry.npmjs.org", "github.com"]
     }
   },
   "hooks": {
