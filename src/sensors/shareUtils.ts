@@ -1,5 +1,5 @@
 import * as Clipboard from "expo-clipboard";
-import * as FileSystem from "expo-file-system";
+import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Share } from "react-native";
 import type { Entrada } from "@/types/entrada";
@@ -9,12 +9,10 @@ export async function compartirEntrada(entrada: Entrada): Promise<"shared" | "co
   const text = formatearEntradaParaCompartir(entrada);
   try {
     const canShareFile = await Sharing.isAvailableAsync();
-    if (canShareFile && FileSystem.cacheDirectory) {
-      const fileUri = `${FileSystem.cacheDirectory}entrada-${entrada.id}.txt`;
-      await FileSystem.writeAsStringAsync(fileUri, text, {
-        encoding: FileSystem.EncodingType.UTF8,
-      });
-      await Sharing.shareAsync(fileUri, {
+    if (canShareFile) {
+      const tempFile = new File(Paths.cache, `entrada-${entrada.id}.txt`);
+      tempFile.write(text);
+      await Sharing.shareAsync(tempFile.uri, {
         mimeType: "text/plain",
         dialogTitle: entrada.titulo,
       });

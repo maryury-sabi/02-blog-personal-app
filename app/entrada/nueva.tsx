@@ -1,6 +1,6 @@
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { Alert } from "react-native";
+import { useRouter } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, BackHandler } from "react-native";
 import { EntradaForm, type EntradaFormValues } from "@/components/EntradaForm";
 import { getDatabase } from "@/db/database";
 import { seleccionarYReducirFoto } from "@/sensors/imageUtils";
@@ -20,17 +20,15 @@ const INITIAL_VALUES: EntradaFormValues = {
 
 export default function NuevaEntradaScreen() {
   const router = useRouter();
-  const navigation = useNavigation();
   const [values, setValues] = useState<EntradaFormValues>(INITIAL_VALUES);
   const [guardado, setGuardado] = useState(false);
   const { cargando: cityLoading, detectarCiudad } = useLocationCity();
   const { altitudM } = useBarometerAltitude(true);
 
-  useEffect(() => {
-    if (altitudM !== null && values.altitudM === null) {
-      setValues((prev) => ({ ...prev, altitudM }));
-    }
-  }, [altitudM, values.altitudM]);
+  const effectiveValues: EntradaFormValues = {
+    ...values,
+    altitudM: values.altitudM ?? altitudM,
+  };
 
   const hayCambios =
     !guardado &&
@@ -38,33 +36,34 @@ export default function NuevaEntradaScreen() {
       values.contenido.trim().length > 0 ||
       values.fotoUri !== null);
 
+  const confirmarSalida = useCallback(() => {
+    if (!hayCambios) {
+      router.back();
+      return true;
+    }
+    Alert.alert("Cambios sin guardar", "¿Deseas salir y descartar lo escrito?", [
+      { text: "Seguir editando", style: "cancel" },
+      { text: "Salir", style: "destructive", onPress: () => router.back() },
+    ]);
+    return true;
+  }, [hayCambios, router]);
+
   useEffect(() => {
-    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      if (!hayCambios) return;
-      e.preventDefault();
-      Alert.alert("Cambios sin guardar", "¿Deseas salir y descartar lo escrito?", [
-        { text: "Seguir editando", style: "cancel" },
-        {
-          text: "Salir",
-          style: "destructive",
-          onPress: () => navigation.dispatch(e.data.action),
-        },
-      ]);
-    });
-    return unsubscribe;
-  }, [hayCambios, navigation]);
+    const sub = BackHandler.addEventListener("hardwareBackPress", confirmarSalida);
+    return () => sub.remove();
+  }, [confirmarSalida]);
 
   async function manejarGuardar(borrador: boolean) {
     const db = await getDatabase();
     await guardarEntrada(db, {
-      titulo: values.titulo,
-      contenido: values.contenido,
-      etiquetas: normalizarEtiquetas(values.etiquetasTexto.split(",")),
+      titulo: effectiveValues.titulo,
+      contenido: effectiveValues.contenido,
+      etiquetas: normalizarEtiquetas(effectiveValues.etiquetasTexto.split(",")),
       borrador,
       destacada: false,
-      lugar: values.lugar.trim() || null,
-      altitud_m: values.altitudM,
-      foto_uri: values.fotoUri,
+      lugar: effectiveValues.lugar.trim() || null,
+      altitud_m: effectiveValues.altitudM,
+      foto_uri: effectiveValues.fotoUri,
       foto_url: null,
     });
     setGuardado(true);
@@ -73,7 +72,7 @@ export default function NuevaEntradaScreen() {
 
   return (
     <EntradaForm
-      values={values}
+      values={effectiveValues}
       onChange={setValues}
       cityLoading={cityLoading}
       onDetectCity={async () => {

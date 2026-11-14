@@ -11,6 +11,12 @@ import {
   sincronizarPendientes,
 } from "@/services/entradaService";
 
+jest.mock("expo-secure-store", () => ({
+  getItemAsync: jest.fn(),
+  setItemAsync: jest.fn(),
+  deleteItemAsync: jest.fn(),
+}));
+
 interface FakeState {
   entradas: Map<number, { id: number; titulo: string; contenido: string; deleted: number }>;
   etiquetas: Map<string, { id: number; nombre: string }>;

@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react-native";
+import { render, screen } from "@testing-library/react-native";
 import React from "react";
 import { EntradaForm, type EntradaFormValues } from "@/components/EntradaForm";
 
@@ -12,7 +12,7 @@ describe("Componente EntradaForm", () => {
     onPublish: jest.fn(),
   };
 
-  it("el botón «Publicar» queda deshabilitado con formulario inválido", () => {
+  it("el botón «Publicar» queda deshabilitado con formulario inválido", async () => {
     const invalidValues: EntradaFormValues = {
       titulo: "Hi",
       contenido: "Corto",
@@ -21,12 +21,12 @@ describe("Componente EntradaForm", () => {
       altitudM: null,
       fotoUri: null,
     };
-    const { getByLabelText } = render(<EntradaForm values={invalidValues} {...baseProps} />);
-    const publishBtn = getByLabelText("Publicar entrada");
+    await render(<EntradaForm values={invalidValues} {...baseProps} />);
+    const publishBtn = screen.getByLabelText("Publicar entrada");
     expect(publishBtn.props.accessibilityState?.disabled).toBe(true);
   });
 
-  it("el botón «Publicar» se habilita cuando título y contenido son válidos", () => {
+  it("el botón «Publicar» se habilita cuando título y contenido son válidos", async () => {
     const validValues: EntradaFormValues = {
       titulo: "Título válido del diario",
       contenido: "Contenido válido con más de diez caracteres.",
@@ -35,8 +35,8 @@ describe("Componente EntradaForm", () => {
       altitudM: 1500,
       fotoUri: null,
     };
-    const { getByLabelText } = render(<EntradaForm values={validValues} {...baseProps} />);
-    const publishBtn = getByLabelText("Publicar entrada");
+    await render(<EntradaForm values={validValues} {...baseProps} />);
+    const publishBtn = screen.getByLabelText("Publicar entrada");
     expect(publishBtn.props.accessibilityState?.disabled).toBe(false);
   });
 });

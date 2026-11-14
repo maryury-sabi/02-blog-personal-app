@@ -90,25 +90,55 @@ function MarkdownBody({ lines, fontSize }: { lines: MarkdownLine[]; fontSize: nu
   );
 }
 
+function confirmarBorrado(id: number, onDeleted: () => void) {
+  Alert.alert("Eliminar entrada", "¿Seguro que deseas eliminar esta entrada?", [
+    { text: "Cancelar", style: "cancel" },
+    {
+      text: "Eliminar",
+      style: "destructive",
+      onPress: async () => {
+        const db = await getDatabase();
+        await eliminarEntrada(db, id);
+        onDeleted();
+      },
+    },
+  ]);
+}
+
 export default function DetalleEntradaScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [entrada, setEntrada] = useState<Entrada | null>(null);
   const [fontSize, setFontSize] = useState(16);
 
-  const cargar = useCallback(async () => {
+  const recargar = useCallback(async () => {
     const numId = Number(id);
     if (!Number.isFinite(numId)) return;
     const db = await getDatabase();
-    setEntrada(await obtenerEntrada(db, numId));
-    const savedSize = await obtenerPreferencia(db, "font_size");
-    const parsed = savedSize ? Number(savedSize) : 16;
-    if (parsed >= MIN_FONT && parsed <= MAX_FONT) setFontSize(parsed);
+    const item = await obtenerEntrada(db, numId);
+    setEntrada(item);
   }, [id]);
 
   useEffect(() => {
-    void cargar();
-  }, [cargar]);
+    let mounted = true;
+    const numId = Number(id);
+    if (!Number.isFinite(numId)) return;
+    getDatabase()
+      .then(async (db) => {
+        const [item, savedSize] = await Promise.all([
+          obtenerEntrada(db, numId),
+          obtenerPreferencia(db, "font_size"),
+        ]);
+        if (!mounted) return;
+        setEntrada(item);
+        const parsed = savedSize ? Number(savedSize) : 16;
+        if (parsed >= MIN_FONT && parsed <= MAX_FONT) setFontSize(parsed);
+      })
+      .catch(() => undefined);
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
 
   async function cambiarTamano(delta: number) {
     const next = Math.min(MAX_FONT, Math.max(MIN_FONT, fontSize + delta));
@@ -147,7 +177,7 @@ export default function DetalleEntradaScreen() {
           onToggleDestacada={async () => {
             const db = await getDatabase();
             await alternarDestacada(db, entrada.id, !entrada.destacada);
-            await cargar();
+            await recargar();
           }}
           onShare={() => void compartirEntrada(entrada)}
         />
@@ -160,7 +190,7 @@ export default function DetalleEntradaScreen() {
             onPress={async () => {
               const db = await getDatabase();
               await guardarEntrada(db, { ...entrada, borrador: false });
-              await cargar();
+              await recargar();
             }}
             style={styles.publishBtn}
             accessibilityRole="button"
@@ -170,20 +200,7 @@ export default function DetalleEntradaScreen() {
           </Pressable>
         ) : null}
         <Pressable
-          onPress={() =>
-            Alert.alert("Eliminar entrada", "¿Seguro que deseas eliminar esta entrada?", [
-              { text: "Cancelar", style: "cancel" },
-              {
-                text: "Eliminar",
-                style: "destructive",
-                onPress: async () => {
-                  const db = await getDatabase();
-                  await eliminarEntrada(db, entrada.id);
-                  router.back();
-                },
-              },
-            ])
-          }
+          onPress={() => confirmarBorrado(entrada.id, () => router.back())}
           style={styles.deleteBtn}
           accessibilityRole="button"
           accessibilityLabel="Eliminar entrada"
