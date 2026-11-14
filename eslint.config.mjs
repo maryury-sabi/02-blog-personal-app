@@ -2,7 +2,7 @@ import expoConfig from "eslint-config-expo/flat.js";
 
 export default [
   {
-    ignores: [".expo/**", "coverage/**", "node_modules/**", "dist/**", ".claude/**"],
+    ignores: [".expo/**", "coverage/**", "node_modules/**", "dist/**", ".claude/**", ".agents/**"],
   },
   ...expoConfig,
   {

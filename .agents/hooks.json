@@ -1,0 +1,17 @@
+{
+  "safety-gate": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/safety-gate.mjs",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
